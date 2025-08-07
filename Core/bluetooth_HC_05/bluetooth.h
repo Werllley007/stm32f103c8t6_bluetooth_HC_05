@@ -49,9 +49,9 @@ extern void bluetooth_setup(void);
 
 extern int UART_Print_Transmit(char* fmt, ...);
 extern void comandos_at_init(void);
-extern void comandos_at_set_name(UART_HandleTypeDef *huart, const char *name);
-extern void comandos_at_response(UART_HandleTypeDef *huart, const char *cmd);
-extern void comandos_at_setBaudrate(UART_HandleTypeDef *huart, const char *baud);
+extern void comandos_at_set_name(const char *name);
+extern void comandos_at_response(uint8_t *buffer, uint32_t length, uint32_t timeout);
+extern void comandos_at_setBaudrate(uint16_t *baud);
 
 extern void bluetooth_enable_cmd_at(void);
 extern void bluetooth_disable_cmd_at(void);

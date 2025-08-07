@@ -13,7 +13,6 @@ char buff[BUFFER_SIZE];
 
 void bluetooth_setup(void){
 	ble.handler = &huart1;
-	ble.UART_HandleTypeDef 	*handler;
 	ble.GPIOx = enable_cmd_AT_GPIO_Port;
 	ble.GPIO_pin = enable_cmd_AT_Pin;
 	ble.mode = NORMAL;
@@ -21,7 +20,6 @@ void bluetooth_setup(void){
 
 int UART_Print_Transmit(char* fmt, ...){
     va_list args;
-    uint32_t timeout = 1000;
 
     va_start(args, fmt);
     int size = vsnprintf(buff, sizeof(buff), fmt, args);
@@ -31,13 +29,13 @@ int UART_Print_Transmit(char* fmt, ...){
     	errno = ENOMEM;
     	return -1;
     }
-    HAL_StatusTypeDef hal_01 = HAL_UART_Transmit(ble.handler, (uint8_t*)buff, (uint16_t)size, HAL_MAX_DELAY);
-    if(ret != HAL_OK){
-    	errno = ret = HAL_TIMEOUT? ETIMEDOUT:EBUSY;
+    HAL_StatusTypeDef hal_test = HAL_UART_Transmit(ble.handler, (uint8_t*)buff, (uint16_t)size, HAL_MAX_DELAY);
+    if(hal_test != HAL_OK){
+    	errno = hal_test = HAL_TIMEOUT? ETIMEDOUT:EBUSY;
     	return -1;
     }
 
-    comandos_at_response(buff, BUFFER_SIZE, TIMEOUT);
+    comandos_at_response((uint8_t *)buff, BUFFER_SIZE, TIMEOUT);
 
     if(strstr(buff, "OK") != NULL){
 
@@ -75,7 +73,6 @@ void bluetooth_disable_cmd_at(void){
 void bluetooth_init(void){
 	bluetooth_setup();
 	bluetooth_enable_cmd_at();
-	return 0;
 }
 
 
